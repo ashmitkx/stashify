@@ -14,6 +14,7 @@ import { protect } from './middlewares/protect.middleware.js';
 // env vars
 const PORT = process.env.PORT || 5000;
 const clientUrl = process.env.CLIENT_BASE_URL;
+const mongoUrl = process.env.MONGO_URL;
 const session_secret = process.env.SESSION_STORE_SECRET;
 const cookie_secret = process.env.COOKIE_SIGN_SECRET;
 const maxAge = process.env.COOKIE_MAXAGE; // in seconds
@@ -25,7 +26,7 @@ const mongoConnOptions = {
     useUnifiedTopology: true
 };
 const mongoConnection = mongoose
-    .connect(process.env.MONGO_CONNECTION, mongoConnOptions)
+    .connect(mongoUrl, mongoConnOptions)
     .then(con => con.connection.getClient());
 
 const app = express();

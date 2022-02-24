@@ -7,10 +7,9 @@ const client_secret = process.env.SPOTIFY_CLIENT_SECRET;
 const redirect_uri = process.env.CLIENT_BASE_URL + '/api/v1/auth/spotify/callback';
 
 export function spotifyLogin(req, res, next) {
-    // generate and store state in cookie, to prevent CSRF
-    const { stateCookieKey, stateCookieOptions } = res.locals;
+    // generate and store auth state in session, to prevent CSRF
     const state = crypto.randomBytes(256).toString('hex');
-    res.cookie(stateCookieKey, state, stateCookieOptions);
+    req.session.auth_state = state;
 
     // authenticate with spotify
     const scope = 'user-read-email playlist-read-private';
@@ -26,17 +25,16 @@ export function spotifyLogin(req, res, next) {
 }
 
 export async function spotifyCallback(req, res, next) {
-    // attempt to get state from cookie, and see if it matches with the callback query
-    const { stateCookieKey } = res.locals;
-    const state = req.cookies?.[stateCookieKey] || null;
+    // get auth state from session, and see if it matches with the callback query
+    const state = req.session.auth_state || null;
     if (state === null || state !== req.query.state)
         return next({ status: 400, message: 'Inavlid state' });
 
     // check for errors
     if (req.query.error) return next({ status: 401, error: req.query.error });
 
-    // remove the state cookie, no longer needed
-    res.clearCookie(stateCookieKey);
+    // remove the auth state from session, no longer needed
+    delete req.session.auth_state;
 
     // prepare to exchange code for access and refresh tokens
     const code = req.query.code;
