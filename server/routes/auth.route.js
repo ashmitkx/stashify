@@ -2,6 +2,9 @@ import { Router } from 'express';
 import cookieParser from 'cookie-parser';
 import { spotifyLogin, spotifyCallback } from '../api/auth.api.js';
 
+// env vars
+const isProdEnv = process.env.NODE_ENV === 'production';
+
 // @route: /auth
 const router = Router();
 
@@ -9,7 +12,7 @@ const router = Router();
 const stateCookieOptions = {
     httpOnly: true,
     sameSite: 'lax',
-    secure: true
+    secure: isProdEnv // use secure cookies in production environment
 };
 const stateCookieKey = 'spotify_auth_state';
 router.use(cookieParser(stateCookieOptions));

@@ -9,6 +9,7 @@ import { authRouter } from './routes/auth.route.js';
 
 // middlewares
 import { errorHandler } from './middlewares/errors.middleware.js';
+import { protect } from './middlewares/protect.middleware.js';
 
 // env vars
 const PORT = process.env.PORT || 5000;
@@ -16,6 +17,7 @@ const clientUrl = process.env.CLIENT_BASE_URL;
 const session_secret = process.env.SESSION_STORE_SECRET;
 const cookie_secret = process.env.COOKIE_SIGN_SECRET;
 const maxAge = process.env.COOKIE_MAXAGE; // in seconds
+const isProdEnv = process.env.NODE_ENV === 'production';
 
 // connect to mongo
 const mongoConnOptions = {
@@ -44,24 +46,25 @@ const sessionStore = new MongoStore({
     ttl: maxAge,
     crypto: { secret: session_secret }
 });
-app.use(
-    session({
-        secret: cookie_secret,
-        resave: false,
-        saveUninitialized: false,
-        store: sessionStore,
-        name: 'stashify.sid',
-        cookie: {
-            httpOnly: true,
-            maxAge: maxAge * 1000,
-            sameSite: 'lax',
-            secure: true
-        }
-    })
-);
+const sessionOptions = {
+    secret: cookie_secret,
+    rolling: true,
+    resave: false,
+    saveUninitialized: false,
+    store: sessionStore,
+    name: 'stashify.sid',
+    cookie: {
+        httpOnly: true,
+        maxAge: maxAge * 1000,
+        sameSite: 'lax',
+        secure: isProdEnv // use secure cookies in production environment
+    }
+};
+app.use(session(sessionOptions));
 
 // authentication routes
 app.use('/api/v1/auth', authRouter);
+app.get('/a', protect, (req, res) => res.json(req.session));
 
 // error handler
 app.use(errorHandler);

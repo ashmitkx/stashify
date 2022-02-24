@@ -53,13 +53,15 @@ export async function spotifyCallback(req, res, next) {
             headers: { Authorization: authHeader }
         });
 
-        req.session.accessToken = tokens.data.access_token;
-        req.session.refreshToken = tokens.data.refresh_token;
+        // caculate expiration time
+        tokens.data.expires = new Date(Date.now() + tokens.data.expires_in * 1000);
+        req.session.tokens = tokens.data;
     } catch (e) {
         return next({ status: e.response.status, error: e.response.data });
     }
 
-    authHeader = 'Bearer ' + req.session.accessToken;
+    const tokens = req.session.tokens;
+    authHeader = tokens.token_type + ' ' + tokens.access_token;
     const reply = await axios.get(
         'https://api.spotify.com/v1/playlists/6c9Sq1Fys2GKwePje9iWzB?fields=href,name,owner.display_name,snapshot_id,uri,tracks(href,items(added_at,track(album.name,artists.name,name,uri)))',
         { headers: { Authorization: authHeader } }
