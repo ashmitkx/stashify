@@ -1,5 +1,6 @@
 import crypto from 'crypto';
 import axios from 'axios';
+import { SpotifyAPI as Spotify } from './spotify.api.js';
 
 // env vars
 const client_id = process.env.SPOTIFY_CLIENT_ID;
@@ -58,14 +59,12 @@ export async function spotifyCallback(req, res, next) {
         return next({ status: e.response.status, error: e.response.data });
     }
 
+    // store user's email in session
     const tokens = req.session.tokens;
-    authHeader = tokens.token_type + ' ' + tokens.access_token;
-    const reply = await axios.get(
-        'https://api.spotify.com/v1/playlists/6c9Sq1Fys2GKwePje9iWzB?fields=href,name,owner.display_name,snapshot_id,uri,tracks(href,items(added_at,track(album.name,artists.name,name,uri)))',
-        { headers: { Authorization: authHeader } }
-    );
+    const user = await Spotify.get('/me', { tokens });
+    req.session.email = user.email;
 
-    res.json(reply.data);
+    res.redirect('/api/v1/me'); // sod off
 }
 
 function queryString(url, params) {

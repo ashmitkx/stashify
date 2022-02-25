@@ -6,6 +6,7 @@ import MongoStore from 'connect-mongo';
 
 // routes
 import { authRouter } from './routes/auth.route.js';
+import { currUserRouter } from './routes/currentUser.route.js';
 
 // middlewares
 import { errorHandler } from './middlewares/errors.middleware.js';
@@ -63,9 +64,11 @@ const sessionOptions = {
 };
 app.use(session(sessionOptions));
 
-// authentication routes
 app.use('/api/v1/auth', authRouter);
-app.get('/a', protect, (req, res) => res.json(req.session));
+app.use('/api/v1/me', protect, currUserRouter);
+
+// debug route to view data stored in session
+if (!isProdEnv) app.get('/sess', protect, (req, res) => res.json(req.session));
 
 // error handler
 app.use(errorHandler);
