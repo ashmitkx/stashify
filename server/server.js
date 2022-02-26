@@ -7,6 +7,7 @@ import MongoStore from 'connect-mongo';
 // routes
 import { authRouter } from './routes/auth.route.js';
 import { currUserRouter } from './routes/currentUser.route.js';
+import { playlistRouter } from './routes/playlist.route.js';
 
 // middlewares
 import { errorHandler } from './middlewares/errors.middleware.js';
@@ -66,6 +67,7 @@ app.use(session(sessionOptions));
 
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/me', protect, currUserRouter);
+app.use('/api/v1/playlists/:playlist_id', protect, playlistRouter);
 
 // debug route to view data stored in session
 if (!isProdEnv) app.get('/sess', protect, (req, res) => res.json(req.session));

@@ -1,8 +1,11 @@
 export function errorHandler(error, req, res, next) {
-    if (res.headersSent) return next(error);
-
+    // print the error
+    console.error(error);
     if (error.stack) console.error(error.stack);
 
+    if (res.headersSent) return next(error);
+
+    // send the error to client
     const status = error.status || 500;
     res.status(status);
     res.json({
@@ -11,6 +14,4 @@ export function errorHandler(error, req, res, next) {
         route: req.route?.path,
         methods: req.route?.methods
     });
-
-    
 }

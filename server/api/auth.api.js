@@ -13,7 +13,8 @@ export function spotifyLogin(req, res, next) {
     req.session.auth_state = state;
 
     // authenticate with spotify
-    const scope = 'user-read-email playlist-read-private';
+    const scope =
+        'user-read-email playlist-read-private playlist-modify-public playlist-modify-private';
     const params = {
         response_type: 'code',
         client_id,
