@@ -7,7 +7,7 @@ export function trackLimit(req, res, next) {
     if (trackCount > maxTracks)
         return next({
             status: 400,
-            message: `Cannot send more than ${maxTracks} tracks (sent ${trackCount}).`
+            message: `Cannot send more than ${maxTracks} unique tracks (sent ${trackCount}).`
         });
 
     next();
