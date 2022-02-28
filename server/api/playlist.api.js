@@ -20,10 +20,10 @@ export async function getPlaylist(req, res, next) {
 
     let playlist;
     try {
+        // TODO: handle limit/pagination
         playlist = await Spotify.get(`/playlists/${playlist_id}`, { params, tokens });
     } catch (e) {
-        const { status, message } = e.response.data.error;
-        next({ status, message });
+        return next(e); // SpotifyError
     }
 
     res.json(playlist);
@@ -42,8 +42,7 @@ export async function restoreTracks(req, res, next) {
     try {
         await Spotify.post(`/playlists/${playlist_id}/tracks`, { body, tokens });
     } catch (e) {
-        const { status, message } = e.response.data.error;
-        next({ status, message });
+        return next(e); // SpotifyError
     }
 
     res.status(201).send();
@@ -61,8 +60,7 @@ export async function removeTracks(req, res, next) {
     try {
         await Spotify.delete(`/playlists/${playlist_id}/tracks`, { body, tokens });
     } catch (e) {
-        const { status, message } = e.response.data.error;
-        next({ status, message });
+        return next(e); // SpotifyError
     }
 
     res.status(204).send();

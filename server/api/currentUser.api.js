@@ -7,8 +7,7 @@ export async function getCurrUserDetails(req, res, next) {
     try {
         data = await Spotify.get('/me', { tokens });
     } catch (e) {
-        // TODO: verify that this works
-        next({ status: e.response.status, error: e.response.data });
+        return next(e); // SpotifyError
     }
 
     // filter out fields from data
@@ -25,8 +24,7 @@ export async function getCurrUserPlaylists(req, res, next) {
     try {
         data = await Spotify.get('/me/playlists', { tokens }); // TODO: handle limit/pagination
     } catch (e) {
-        // TODO: verify that this works
-        next({ status: e.response.status, error: e.response.data });
+        return next(e); // SpotifyError
     }
 
     // filter out fields from data

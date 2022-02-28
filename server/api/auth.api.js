@@ -1,6 +1,8 @@
 import crypto from 'crypto';
 import axios from 'axios';
 import { SpotifyAPI as Spotify } from './spotify.api.js';
+import { AppError } from '../lib/appError.js';
+import { SpotifyError } from '../lib/spotifyError.js';
 
 // env vars
 const client_id = process.env.SPOTIFY_CLIENT_ID;
@@ -30,10 +32,10 @@ export async function spotifyCallback(req, res, next) {
     // get auth state from session, and see if it matches with the callback query
     const state = req.session.auth_state || null;
     if (state === null || state !== req.query.state)
-        return next({ status: 400, message: 'Inavlid state' });
+        return next(new AppError(400, 'Inavlid state'));
 
     // check for errors
-    if (req.query.error) return next({ status: 401, error: req.query.error });
+    if (req.query.error) return next(new SpotifyError(401, req.query.error));
 
     // remove the auth state from session, no longer needed
     delete req.session.auth_state;
@@ -57,7 +59,11 @@ export async function spotifyCallback(req, res, next) {
         tokens.data.expires = new Date(Date.now() + tokens.data.expires_in * 1000);
         req.session.tokens = tokens.data;
     } catch (e) {
-        return next({ status: e.response.status, error: e.response.data });
+        const status = e.response.status;
+        const errorData = e.response.data;
+        const message = `${errorData.error}: ${errorData.error_description}`;
+
+        return next(new SpotifyError(status, message));
     }
 
     // store user's email in session

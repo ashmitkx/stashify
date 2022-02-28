@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { SpotifyError } from '../lib/spotifyError.js';
 
 // env vars
 const client_id = process.env.SPOTIFY_CLIENT_ID;
@@ -33,12 +34,16 @@ export async function protect(req, res, next) {
         });
 
         // caculate expiration time
-        newTokens.data.expires = new Date(Date.now() + newTokens.data.expires_in);
+        newTokens.data.expires = new Date(Date.now() + newTokens.data.expires_in * 1000);
         // the spotify api may or may not return a refresh token, so merge in the refresh_token
         req.session.tokens = { ...req.session.tokens, ...newTokens.data };
     } catch (e) {
         // TODO: Add check for expired refresh token
-        return next({ status: e.response.status, error: e.response.data });
+        const status = e.response.status;
+        const errorData = e.response.data;
+        const message = `${errorData.error}: ${errorData.error_description}`;
+
+        return next(new SpotifyError(status, message));
     }
 
     next();

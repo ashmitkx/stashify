@@ -10,7 +10,7 @@ export async function stashTracks(req, res, next) {
     try {
         await stash.save();
     } catch (e) {
-        next(e);
+        return next(e);
     }
 
     next(); // hand control over to playlist.api.js - removeTracks
@@ -26,7 +26,7 @@ export async function getStashes(req, res, next) {
     try {
         stashes = await Stash.find(query).select('-__v'); // remove __v field
     } catch (e) {
-        next(e);
+        return next(e);
     }
 
     res.json(stashes);
@@ -40,7 +40,7 @@ export async function deleteStash(req, res, next) {
     try {
         await Stash.deleteOne(query);
     } catch (e) {
-        next(e);
+        return next(e);
     }
 
     res.status(204).send();

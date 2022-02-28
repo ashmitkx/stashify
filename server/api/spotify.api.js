@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { SpotifyError } from '../lib/spotifyError.js';
 
 export class SpotifyAPI {
     static baseURL = 'https://api.spotify.com/v1';
@@ -20,6 +21,11 @@ async function apiCall(method, baseURL, url, { params = null, body = null, token
     const headers = { Authorization: tokens.token_type + ' ' + tokens.access_token };
     const axiosConfig = { method, baseURL, url, params, data: body, headers };
 
-    const reply = await axios.request(axiosConfig);
-    return reply.data;
+    try {
+        const reply = await axios.request(axiosConfig);
+        return reply.data;
+    } catch (e) {
+        const { status, message } = e.response.data.error;
+        throw new SpotifyError(status, message);
+    }
 }
