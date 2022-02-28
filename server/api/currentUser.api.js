@@ -11,8 +11,8 @@ export async function getCurrUserDetails(req, res, next) {
     }
 
     // filter out fields from data
-    const { display_name, email, type } = data;
-    data = { display_name, email, type };
+    const { display_name, email, type, id } = data;
+    data = { display_name, email, type, id };
 
     res.json(data);
 }
@@ -26,6 +26,10 @@ export async function getCurrUserPlaylists(req, res, next) {
     } catch (e) {
         return next(e); // SpotifyError
     }
+
+    // filter playlists to only include the user's owned playlists
+    const spotify_user_id = req.session.spotify_user_id;
+    data.items = data.items.filter(playlist => playlist.owner.id == spotify_user_id);
 
     // filter out fields from data
     data.items = data.items.map(playlist => {

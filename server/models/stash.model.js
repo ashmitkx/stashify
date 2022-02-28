@@ -1,10 +1,12 @@
 import mongoose from 'mongoose';
 
 const stashSchema = new mongoose.Schema({
-    user_email: {
+    spotify_user_id: {
         type: String,
         required: true,
-        trim: true
+        trim: true,
+        index: true,
+        match: [/^[A-Za-z0-9]{25}$/, 'Invalid spotify user id.'] // spotify uses base-62 ids of length 25
     },
     playlist_id: {
         type: String,

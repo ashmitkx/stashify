@@ -1,12 +1,12 @@
 import { Stash } from '../models/stash.model.js';
 
 export async function stashTracks(req, res, next) {
-    const user_email = req.session.email;
+    const spotify_user_id = req.session.spotify_user_id;
     const playlist_id = req.params.playlist_id;
     const track_ids = req.body.track_ids;
 
     // create new stash
-    const stash = new Stash({ user_email, playlist_id, track_ids });
+    const stash = new Stash({ spotify_user_id, playlist_id, track_ids });
     try {
         await stash.save();
     } catch (e) {
@@ -17,11 +17,11 @@ export async function stashTracks(req, res, next) {
 }
 
 export async function getStashes(req, res, next) {
-    const user_email = req.session.email;
+    const spotify_user_id = req.session.spotify_user_id;
     const playlist_id = req.params.playlist_id;
 
     // get all stashes for the user's playlist
-    const query = { user_email, playlist_id };
+    const query = { spotify_user_id, playlist_id };
     let stashes;
     try {
         stashes = await Stash.find(query).select('-__v'); // remove __v field

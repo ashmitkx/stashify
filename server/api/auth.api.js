@@ -66,10 +66,10 @@ export async function spotifyCallback(req, res, next) {
         return next(new SpotifyError(status, message));
     }
 
-    // store user's email in session
+    // store user's spotify id in session
     const tokens = req.session.tokens;
     const user = await Spotify.get('/me', { tokens });
-    req.session.email = user.email;
+    req.session.spotify_user_id = user.id;
 
     res.redirect('/api/v1/me'); // sod off
 }
@@ -77,6 +77,7 @@ export async function spotifyCallback(req, res, next) {
 function queryString(url, params) {
     const urlParams = new URLSearchParams(url.search);
 
+    // convert params object to query string
     Object.entries(params).map(([key, value]) => urlParams.append(key, value));
     return urlParams.toString();
 }
