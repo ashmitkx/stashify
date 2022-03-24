@@ -1,0 +1,42 @@
+@use './vars';
+
+.playlists {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    justify-items: stretch;
+    align-items: stretch;
+
+    gap: 1.5em;
+}
+
+.playlist {
+    background: vars.$card-bg;
+
+    aspect-ratio: 1/1.35;
+    max-height: 400px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 0.75em;
+
+    padding: 1.1em;
+    border-radius: 8px;
+
+    transition: background 250ms ease;
+    &:hover {
+        background: vars.$card-bg-selected;
+    }
+
+    .img-cnt {
+        border-radius: 5px;
+        overflow: hidden;
+    }
+
+    h2 {
+        margin-top: 0.3em;
+    }
+
+    p {
+        @include vars.line-clamp(2);
+    }
+}
