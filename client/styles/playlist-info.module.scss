@@ -1,0 +1,42 @@
+@use './vars';
+
+.playlist-info {
+    display: flex;
+    align-items: flex-end;
+    gap: 2em;
+
+    .img-cnt {
+        flex: 15em 0 1;
+        border-radius: 6px;
+        overflow: hidden;
+    }
+}
+
+.main-info {
+    flex: 20em 1 0;
+
+    display: flex;
+    flex-flow: column;
+    gap: 1em;
+
+    h1 {
+        font-size: 5em;
+        font-weight: 900;
+        color: vars.$text;
+
+        margin: -0.05em 0;
+    }
+
+    span {
+        text-transform: uppercase;
+    }
+
+    p {
+        line-height: 1.6;
+    }
+}
+
+.extra-info {
+    font-size: 0.9em;
+    font-weight: 600;
+}
