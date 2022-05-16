@@ -1,0 +1,30 @@
+@use './vars';
+
+.checkbox {
+    width: 1.2em;
+    height: 1.2em;
+    border: 2px solid vars.$white-faded;
+    border-radius: 0.2em;
+    cursor: pointer;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &::before {
+        content: '';
+        width: 0.9em;
+        height: 0.9em;
+
+        transform-origin: bottom left;
+        clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+        box-shadow: inset 1em 1em vars.$sp-green;
+
+        transform: scale(0);
+        transition: 100ms transform ease-in-out;
+    }
+
+    &:checked::before {
+        transform: scale(1);
+    }
+}

@@ -13,12 +13,18 @@ a {
     text-decoration: none;
 }
 
+input[type='checkbox'] {
+    appearance: none;
+    font: inherit;
+    color: inherit;
+}
+
 body {
     font-family: 'Inter', sans-serif;
     color: vars.$text;
     background: vars.$bg;
-    
-    padding: 2em 2em 0 2em;
+
+    padding: 1.5em 1.5em 0 1.5em;
 }
 
 main {
@@ -31,4 +37,30 @@ h1 {
     font-size: 1.6em;
     font-weight: 700;
     color: vars.$text-faded;
+}
+
+h2 {
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+h3 {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.sub {
+    color: vars.$text-faded;
+    font-weight: 500;
+    font-size: 0.9rem;
+
+    &.--small {
+        font-weight: 600;
+        font-size: 0.8rem;
+    }
+
+    &.--large {
+        font-weight: 400;
+        font-size: 1rem;
+    }
 }
