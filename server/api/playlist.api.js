@@ -1,14 +1,21 @@
 import { SpotifyAPI as Spotify } from './spotify.api.js';
+import { Stash } from '../models/stash.model.js';
 
 const playlistFieldsToGet = `
     id,
     name,
-    owner.display_name,
+    owner(display_name,id),
     snapshot_id,
+    images,
+    description,
+    followers.total,
+    public,
     tracks(
         items(
             added_at,
-            track(album.name,artists.name,name,id)
+            track(
+                album(name,images),
+                artists.name,name,id,duration_ms)
         )
     )
 `.replace(/\s/g, ''); // remove all whitespaces, else this param wont work.
@@ -29,7 +36,7 @@ export async function getPlaylist(req, res, next) {
     res.json(playlist);
 }
 
-export async function restoreTracks(req, res, next) {
+export async function restorePlaylistTracks(req, res, next) {
     const tokens = req.session.tokens;
     const playlist_id = req.params.playlist_id;
     const track_ids = req.body.track_ids;
@@ -45,10 +52,10 @@ export async function restoreTracks(req, res, next) {
         return next(e); // SpotifyError
     }
 
-    res.status(201).send();
+    next(); // hand control over to stash.api.js - removeStashTracks
 }
 
-export async function removeTracks(req, res, next) {
+export async function removePlaylistTracks(req, res, next) {
     const tokens = req.session.tokens;
     const playlist_id = req.params.playlist_id;
     const track_ids = req.body.track_ids;
