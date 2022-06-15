@@ -33,8 +33,16 @@ export async function getCurrUserPlaylists(req, res, next) {
 
     // filter out fields from data
     data.items = data.items.map(playlist => {
-        const { name, id, owner, tracks, type } = playlist;
-        return { name, id, owner_name: owner.display_name, track_count: tracks.total, type };
+        const { name, id, owner, tracks, type, images, description } = playlist;
+        return {
+            name,
+            id,
+            owner_name: owner.display_name,
+            track_count: tracks.total,
+            description,
+            images,
+            type
+        };
     });
 
     res.json(data);

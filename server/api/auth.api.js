@@ -32,7 +32,7 @@ export async function spotifyCallback(req, res, next) {
     // get auth state from session, and see if it matches with the callback query
     const state = req.session.auth_state || null;
     if (state === null || state !== req.query.state)
-        return next(new AppError(400, 'Inavlid state'));
+        return next(new AppError(400, 'Invalid state'));
 
     // check for errors
     if (req.query.error) return next(new SpotifyError(401, req.query.error));
@@ -71,6 +71,7 @@ export async function spotifyCallback(req, res, next) {
     const user = await Spotify.get('/me', { tokens });
     req.session.spotify_user_id = user.id;
 
+    // TODO: Dont
     res.redirect('/api/v1/me'); // sod off
 }
 

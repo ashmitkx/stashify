@@ -25,7 +25,7 @@ async function apiCall(method, baseURL, url, { params = null, body = null, token
         const reply = await axios.request(axiosConfig);
         return reply.data;
     } catch (e) {
-        const { status, message } = e.response.data.error || e.response;
+        const { status, message } = e.response.data?.error || e.response;
         throw new SpotifyError(status, message);
     }
 }
