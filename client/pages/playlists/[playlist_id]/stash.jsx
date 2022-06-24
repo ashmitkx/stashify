@@ -6,40 +6,40 @@ import { api } from '../../../utils/stashify.api';
 import TrackList from '../../../components/track-list';
 import PlaylistInfo from '../../../components/playlist-info';
 
-const Tracks = () => {
+const Stash = () => {
     const router = useRouter();
     const { playlist_id } = router.query;
 
     const [playlistInfo, setPlaylistInfo] = useState(null);
-    const [playlistTracks, setPlaylistTracks] = useState(null);
+    const [stashTracks, setStashTracks] = useState(null);
     const selectedTracksState = useState({});
 
     useEffect(() => {
-        async function getPlaylist() {
+        async function getStash() {
             try {
                 const resInfo = await api.get(`/playlists/${playlist_id}`);
-                const resTracks = await api.get(`/playlists/${playlist_id}/tracks`);
+                const resTracks = await api.get(`/playlists/${playlist_id}/stash`);
 
                 setPlaylistInfo(resInfo.data);
-                setPlaylistTracks(resTracks.data.tracks.items);
+                setStashTracks(resTracks.data.tracks);
             } catch (err) {
                 console.error(err);
             }
         }
 
-        if (playlist_id) getPlaylist();
+        if (playlist_id) getStash();
     }, [playlist_id]);
 
-    if (!playlistInfo || !playlistTracks) return null;
+    if (!playlistInfo || !stashTracks) return null;
     return (
         <main>
             <Head>
-                <title>{playlistInfo.name} — Tracks</title>
+                <title>{playlistInfo.name} — Stash</title>
             </Head>
             <PlaylistInfo {...playlistInfo} />
-            <TrackList trackList={playlistTracks} selectedTracksState={selectedTracksState} />
+            <TrackList trackList={stashTracks} selectedTracksState={selectedTracksState} />
         </main>
     );
 };
 
-export default Tracks;
+export default Stash;
