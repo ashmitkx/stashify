@@ -32,32 +32,34 @@ function Playlists() {
             <h1>Your Playlists</h1>
             <div className={cx('playlists')}>
                 {playlists?.map(playlist => (
-                    <Playlist key={playlist.id} {...playlist} />
+                    <Link href={`/playlists/${playlist.id}/tracks`} key={playlist.id}>
+                        <a>
+                            <Playlist {...playlist} />
+                        </a>
+                    </Link>
                 ))}
             </div>
         </main>
     );
 }
 
-function Playlist({ name, id: playlist_id, owner_name, track_count, description, images, type }) {
+function Playlist({ name, owner_name, track_count, description, images, type }) {
     const image = images[0];
 
     return (
-        <Link href={`/playlists/${playlist_id}/tracks`}>
-            <a className={cx('playlist')}>
-                <div className={cx('img-cnt')}>
-                    <Image
-                        src={image?.url || '/images/missing-song-art.png'}
-                        alt='playlist img'
-                        height={image?.height || 640}
-                        width={image?.width || 640}
-                        layout='responsive'
-                    />
-                </div>
-                <h2>{name}</h2>
-                <p className='sub --small'>{description || `By ${owner_name}`}</p>
-            </a>
-        </Link>
+        <article className={cx('playlist')}>
+            <div className={cx('img-cnt')}>
+                <Image
+                    src={image?.url || '/images/missing-song-art.png'}
+                    alt='playlist img'
+                    height={image?.height || 640}
+                    width={image?.width || 640}
+                    layout='responsive'
+                />
+            </div>
+            <h2>{name}</h2>
+            <p className='sub --small'>{description || `By ${owner_name}`}</p>
+        </article>
     );
 }
 

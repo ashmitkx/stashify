@@ -13,6 +13,14 @@ a {
     text-decoration: none;
 }
 
+span {
+    display: block;
+}
+
+ul {
+    list-style: none;
+}
+
 input[type='checkbox'] {
     appearance: none;
     font: inherit;
@@ -34,7 +42,7 @@ main {
 }
 
 h1 {
-    font-size: 1.6em;
+    font-size: 1.6rem;
     font-weight: 700;
     color: vars.$text-faded;
 }

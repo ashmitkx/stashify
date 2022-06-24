@@ -27,7 +27,7 @@
         margin: -0.05em 0;
     }
 
-    span {
+    .visibility {
         text-transform: uppercase;
     }
 
@@ -36,7 +36,13 @@
     }
 }
 
-.extra-info {
-    font-size: 0.9em;
-    font-weight: 600;
+.bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .owner {
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
 }

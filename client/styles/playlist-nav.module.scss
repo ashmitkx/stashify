@@ -1,0 +1,32 @@
+@use './vars';
+
+.pl-nav {
+    display: flex;
+    flex-flow: row;
+
+    li {
+        width: 7em;
+        overflow: hidden;
+        border: 1px solid vars.$sp-green;
+        &:first-child {
+            border-radius: 8px 0 0 8px;
+        }
+        &:last-child {
+            border-radius: 0 8px 8px 0;
+        }
+    }
+
+    :global(.navlink) {
+        color: vars.$text-faded;
+        padding: 0.7em 0;
+        text-align: center;
+
+        font-size: 0.9rem;
+        font-weight: 600;
+
+        &:global(.--active) {
+            background: vars.$sp-green;
+            color: vars.$text-dark;
+        }
+    }
+}
